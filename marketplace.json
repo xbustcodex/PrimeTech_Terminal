@@ -1,0 +1,20 @@
+{
+  "tools": [
+    {
+      "id": "termuxfm",
+      "name": "Termux File Manager",
+      "description": "Beginner-friendly Termux companion + file manager.",
+      "version": "3.0.6",
+      "apkUrl": "https://github.com/YOURUSER/termux-file-manager/releases/download/v3.0.6/app-release.apk",
+      "repoUrl": "https://github.com/YOURUSER/termux-file-manager"
+    },
+    {
+      "id": "guardian",
+      "name": "Guardian",
+      "description": "Security toolkit and utilities.",
+      "version": "1.2.0",
+      "apkUrl": "https://github.com/YOURUSER/guardian/releases/download/v1.2.0/app-release.apk",
+      "repoUrl": "https://github.com/YOURUSER/guardian"
+    }
+  ]
+}
