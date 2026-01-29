@@ -1,1 +1,21 @@
+{
+  "tools": [
+    {
+      "id": "termuxfm",
+      "name": "Termux File Manager",
+      "description": "Beginner-friendly Termux companion + file manager.",
+      "version": "3.0.9",
+      "apkUrl": "https://github.com/xbustcodex/termux-file-manager/releases/download/v3.0.9/app-release.apk",
+      "repoUrl": "https://github.com/xbustcodex/termux-file-manager"
+    },
+    {
+      "id": "devtoolbox",
+      "name": "android-dev-toolbox",
+      "description": "Security toolkit and utilities.",
+      "version": "1.0.0",
+      "apkUrl": "https://github.com/xbustcodex/android-dev-toolbox/releases/download/v1.0.0/app-release.apk",
+      "repoUrl": "https://github.com/xbustcodex/android-dev-toolbox"
+    }
+  ]
+}
 
