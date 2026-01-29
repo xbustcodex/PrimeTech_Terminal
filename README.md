@@ -98,8 +98,9 @@ Example use cases:
 (Designed so more plugins can be added without touching core code.)
 
 -----------------------------------------------------------------------------------------
----
+
 ## 🏗️ Project Structure
+
 app/
  ├─ core/
  │   ├─ commands/
@@ -110,7 +111,9 @@ app/
  │   ├─ terminal/
  │   └─ theme/
  └─ MainActivity.kt
----
+
+
+
 ---------------------------------------------------------------------------------
 
 🔧 Build & Run
