@@ -98,7 +98,7 @@ Example use cases:
 (Designed so more plugins can be added without touching core code.)
 
 -----------------------------------------------------------------------------------------
-
+---
 ## 🏗️ Project Structure
 app/
  ├─ core/
@@ -110,7 +110,7 @@ app/
  │   ├─ terminal/
  │   └─ theme/
  └─ MainActivity.kt
-
+---
 ---------------------------------------------------------------------------------
 
 🔧 Build & Run
@@ -121,14 +121,16 @@ Android Studio (Giraffe+ recommended)
 JDK 17
 
 Gradle Wrapper (included)
+
 ---
+
 Build
 ./gradlew assembleDebug
 
 Release
 ./gradlew assembleRelease
+
 ---
-----------------------------------------------------------------------------------------
 
 🛣️ Roadmap
 
