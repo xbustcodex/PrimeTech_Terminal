@@ -18,7 +18,7 @@ fun MarketplacePanel(
     onClose: () -> Unit
 ) {
     // ✅ Put your GitHub RAW JSON URL here:
-    val feedUrl = "https://raw.githubusercontent.com/YOURUSER/YOURREPO/main/marketplace.json"
+    val feedUrl = "https://raw.githubusercontent.com/xbustcodex/PrimeTech_Terminal/main/marketplace.json"
     val repo = remember { MarketplaceRepository(feedUrl) }
 
     var isLoading by remember { mutableStateOf(true) }
