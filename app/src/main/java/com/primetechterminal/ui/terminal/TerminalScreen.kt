@@ -36,11 +36,7 @@ fun TerminalScreen(
         ) {
 
             // Optional header (can remove later for pure Termux feel)
-            Text(
-                text = "PrimeTech Terminal",
-                style = MaterialTheme.typography.titleMedium,
-                fontFamily = FontFamily.Monospace
-            )
+            
 
             Spacer(Modifier.height(8.dp))
 
