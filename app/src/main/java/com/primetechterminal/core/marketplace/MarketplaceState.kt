@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.first
 
 private val Context.marketplaceDataStore by preferencesDataStore(name = "marketplace_state")
 
@@ -35,4 +36,13 @@ class MarketplaceState(private val context: Context) {
             prefs[enabledKey(id)] = value
         }
     }
+    suspend fun isEnabled(id: String, defaultValue: Boolean = true): Boolean {
+        val prefs = context.marketplaceDataStore.data.first()
+        return prefs[enabledKey(id)] ?: defaultValue
+    } 
+    suspend fun isInstalled(id: String, defaultValue: Boolean = false): Boolean {
+        val prefs = context.marketplaceDataStore.data.first()
+        return prefs[installedKey(id)] ?: defaultValue
+    }
 }
+
