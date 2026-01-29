@@ -123,10 +123,11 @@ Android Studio (Giraffe+ recommended)
 
 JDK 17
 
-bash
+
 ---
 
 Gradle Wrapper (included)
+
 
 Build
 ./gradlew assembleDebug
