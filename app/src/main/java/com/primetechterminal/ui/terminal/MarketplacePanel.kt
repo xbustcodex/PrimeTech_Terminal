@@ -6,26 +6,36 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import com.primetechterminal.core.marketplace.MarketplaceRepository
+import com.primetechterminal.core.marketplace.MarketplaceState
 import com.primetechterminal.core.marketplace.MarketplaceTool
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Composable
 fun MarketplacePanel(
     onClose: () -> Unit
 ) {
-    // ✅ Put your GitHub RAW JSON URL here:
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
+    // ✅ GitHub RAW JSON URL
     val feedUrl = "https://raw.githubusercontent.com/xbustcodex/PrimeTech_Terminal/main/marketplace.json"
     val repo = remember { MarketplaceRepository(feedUrl) }
+    val state = remember { MarketplaceState(context) }
 
     var isLoading by remember { mutableStateOf(true) }
     var error by remember { mutableStateOf<String?>(null) }
     var tools by remember { mutableStateOf<List<MarketplaceTool>>(emptyList()) }
 
-    LaunchedEffect(Unit) {
+    // ✅ makes Retry actually reload
+    var reloadTick by remember { mutableStateOf(0) }
+
+    LaunchedEffect(reloadTick) {
         isLoading = true
         error = null
         try {
@@ -43,11 +53,14 @@ fun MarketplacePanel(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text(
-            text = "Marketplace",
-            style = MaterialTheme.typography.titleMedium,
-            fontFamily = FontFamily.Monospace
-        )
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Text(
+                text = "Marketplace",
+                style = MaterialTheme.typography.titleMedium,
+                fontFamily = FontFamily.Monospace
+            )
+            OutlinedButton(onClick = onClose) { Text("Close") }
+        }
 
         Spacer(Modifier.height(12.dp))
 
@@ -57,25 +70,30 @@ fun MarketplacePanel(
                 Spacer(Modifier.height(12.dp))
                 Text("Loading tools…", fontFamily = FontFamily.Monospace)
             }
+
             error != null -> {
                 Text("Error: $error", fontFamily = FontFamily.Monospace)
                 Spacer(Modifier.height(10.dp))
-                Button(onClick = {
-                    // quick reload
-                    isLoading = true
-                    error = null
-                    tools = emptyList()
-                }) { Text("Retry") }
+                Button(onClick = { reloadTick++ }) { Text("Retry") }
             }
+
             else -> {
-                LazyColumn(Modifier.weight(1f)) {
-                    items(tools) { tool ->
+                LazyColumn(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    items(tools, key = { it.id }) { tool ->
+                        val installed by state.isInstalledFlow(tool.id).collectAsState(initial = false)
+                        val enabled by state.isEnabledFlow(tool.id).collectAsState(initial = false)
+
                         Card(Modifier.fillMaxWidth()) {
                             Column(Modifier.padding(12.dp)) {
                                 Text(tool.name, fontFamily = FontFamily.Monospace)
+
                                 if (tool.version.isNotBlank()) {
                                     Text("v${tool.version}", fontFamily = FontFamily.Monospace)
                                 }
+
                                 if (tool.description.isNotBlank()) {
                                     Spacer(Modifier.height(6.dp))
                                     Text(tool.description)
@@ -83,29 +101,35 @@ fun MarketplacePanel(
 
                                 Spacer(Modifier.height(10.dp))
 
-                                Row {
-                                    Button(
-                                        onClick = {
-                                            // Next step: download + install
-                                            // tool.apkUrl is what we will use
-                                        }
-                                    ) { Text("Install") }
+                                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                                    if (!installed) {
+                                        Button(onClick = {
+                                            // ✅ Step 1: mark installed (we'll add real APK download next)
+                                            scope.launch { state.setInstalled(tool.id, true) }
+                                        }) { Text("Install") }
+                                    } else {
+                                        OutlinedButton(onClick = {
+                                            scope.launch { state.setInstalled(tool.id, false) }
+                                        }) { Text("Uninstall") }
 
-                                    Spacer(Modifier.width(10.dp))
+                                        FilledTonalButton(onClick = {
+                                            scope.launch { state.setEnabled(tool.id, !enabled) }
+                                        }) { Text(if (enabled) "Disable" else "Enable") }
+                                    }
+                                }
 
-                                    OutlinedButton(onClick = onClose) { Text("Close") }
+                                if (installed && tool.apkUrl.isNotBlank()) {
+                                    Spacer(Modifier.height(8.dp))
+                                    Text(
+                                        "APK: ${tool.apkUrl}",
+                                        style = MaterialTheme.typography.labelSmall
+                                    )
                                 }
                             }
                         }
-                        Spacer(Modifier.height(10.dp))
                     }
                 }
             }
-        }
-
-        Spacer(Modifier.height(10.dp))
-        OutlinedButton(onClick = onClose, modifier = Modifier.fillMaxWidth()) {
-            Text("Close")
         }
     }
 }
